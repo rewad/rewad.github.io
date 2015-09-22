@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Текстовый редактор </title>
+    <meta charset="utf-8" />
+</head>
+<body>
+    <style>
+        #Content1 {
+            background-color:aquamarine;
+            text-align: center;
+        }
+
+        #Content2 {
+            background-color:azure;
+            text-align: center;
+        }
+              
+         
+    </style>
+
+
+    <div id="Content1">
+        <button id="NewButton">Новый файл</button>
+        <button id="OpenButton">Открыть файл</button>
+        <button id="SaveButton">Сохранить файл</button>
+        <button id="CloseButton">Закрыть файл</button>
+    </div>
+    <div id="Content2">
+        <select id="Colors">
+            <option value="black">Black</option>
+            <option value="red">Red</option>
+            <option value="blue">Blue</option>
+            <option value="green">Green</option>
+        </select>
+        <select id="Sizes">
+            <option value="100%">100%</option>
+            <option value="150%">150%</option>
+            <option value="200%">200%</option>
+            <option value="300%">300%</option>
+        </select>
+    </div>
+    <div id="Content2">
+        <textarea id="ContentTextArea"></textarea>
+    </div>
+    <script>
+
+
+
+        var newButton = document.getElementById("NewButton");
+        var openButton = document.getElementById("OpenButton");
+        var saveButton = document.getElementById("SaveButton");
+        var closeButton = document.getElementById("CloseButton");
+        var textBox = document.getElementById("ContentTextArea");
+
+        var selectColors = document.getElementById("Colors");
+        var selectSizes = document.getElementById("Sizes");
+
+        var fileName = null
+        var size = "100%";
+        var color = "black";
+
+        newButton.addEventListener('click', newButtonClick, false)
+        openButton.addEventListener('click', openButtonClick, false)
+        saveButton.addEventListener('click', saveButtonClick, false) 
+        closeButton.addEventListener('click', closeButtonClick, false)
+        selectColors.addEventListener('change', changeColor, false);
+        selectSizes.addEventListener('change', changeSize, false);
+
+        function changeColor()
+        {
+            color = selectColors.value;
+            textBox.style.color=color;
+        }
+
+        function changeSize()
+        {
+            size = selectSizes.value;
+            textBox.style.fontSize = size;
+        }
+
+        function newButtonClick() {
+            fileName = null;
+            textBox.value = "";
+            document.title = ""; 
+        }
+
+        function openButtonClick() {
+            ReadFileName();
+            if (fileName)
+            {
+                var text = localStorage.getItem(fileName);
+                if (text)
+                {
+                    textBox.value = text; 
+                    color= localStorage.getItem(fileName + "color");
+                    textBox.style.color = color;                     
+                    size = localStorage.getItem(fileName + "size");
+                    textBox.style.fontSize = size;
+                }else
+                {
+                    window.alert("Такого файла не существует");
+                }
+
+            }else
+            {
+                alert("Файл не выбран");
+            }
+
+        }
+        function saveButtonClick()
+        {
+            if (!fileName) {
+                ReadFileName();
+            }
+            SaveFile();
+        }
+        function closeButtonClick() {
+            fileName = null;
+            textBox.value = "";
+        }
+
+
+        function SaveFile() {
+            if (fileName) {
+                localStorage.setItem(fileName, textBox.value);
+                localStorage.setItem(fileName+"size", size);
+                localStorage.setItem(fileName+"color", color);
+            }
+        }
+
+        function OpenFile()
+        {
+            if(fileName)
+            {
+                textBox.value = localStorage.getItem(fileName);
+                color = localStorage.getItem(fileName+"color");
+                size = localStorage.getItem(fileName+"size");
+                textBox.style.color = color;
+                textBox.style.fontSize = size;
+            }
+        }
+               
+
+        function ReadFileName() {
+            fileName = window.prompt("Введите название файла.");
+        }
+    </script>
+</body>
+</html>
